@@ -6,6 +6,7 @@ import { View, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
 
 import styles from './cameraStyles';
 
+// restructuring key-value pairs for camera settings as variables
 const { FlashMode: CameraFlashModes, Type: CameraTypes } = Camera.Constants;
 
 export default ({ 
@@ -13,6 +14,7 @@ export default ({
     cameraType = CameraTypes.back, 
     flashMode = CameraFlashModes.off, 
     setFlashMode, setCameraType, 
+    // photo or video dependent on different button presses
     onCaptureIn, onCaptureOut, onLongCapture, onShortCapture,  
 }) => (
     <Grid style={styles.bottomToolbar}>

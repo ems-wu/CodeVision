@@ -1,30 +1,55 @@
-import React from "react";
 import { View, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import { Camera, Permissions } from 'expo-camera';
 
 import styles from './cameraStyles';
+import Toolbar from './toolbar';
+import GalleryPage from './GalleryPage';
 
-class CameraPage extends React.Component {
-    // holds reference to camera component & interacts w/ camera itself
+class CameraPage extends React.Component {s
     camera = null; // null = user denied or hasn't granded permissions
 
     // keeps track of user permission for camera
-
     state = {
-        hasCameraPermision: null,
+        captures: [],
+        // setting flash to be turned off by default
+        flashMode: Camera.Constants.FlashMode.off,
+        capturing: null,
+        // start the back camera by default
+        cameraType: Camera.Constants.Type.back,
+        hasCameraPermission: null,
     };
+
+    setFlashMode = (flashMode) => this.setState({ flashMode });
+    setCameraType = (cameraType) => this.setState({ cameraType });
+    handleCaptureIn = () => this.setState({ capturing: true });
+
+    // handleCaptureOut = () => {
+    //     if (this.state.capturing)
+    //         this.camera.stopRecording();
+    // };
+
+    handleShortCapture = async () => {
+        const photoData = await this.camera.takePictureAsync();
+        this.setState({ capturing: false, captures: [photoData, ...this.state.captures] })
+    };
+
+    // handleLongCapture = async () => {
+    //     const videoData = await this.camera.recordAsync();
+    //     this.setState({ capturing: false, captures: [videoData, ...this.state.captures] });
+    // };
 
     // requests permissions from user
     async componentDidMount() {
-        const camera = await Permissions.askAsync(Permissions.CAMERA);
-        const audio = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
-        const hasCameraPermission = (camera.status === 'granted' && audio.status === 'granted');
+        const camera = await Camera.requestPermissionsAsync();
+        const hasCameraPermission = (camera.status === 'granted');
 
         this.setState({ hasCameraPermission });
     };
 
+
     render() {
-        const { hasCameraPermission } = this.state;
+        const { hasCameraPermission, flashMode, cameraType, capturing, captures } = this.state;
 
         if (hasCameraPermission === null) {
             return <View />;
@@ -33,12 +58,28 @@ class CameraPage extends React.Component {
         }
 
         return (
-            <View>
-                <Camera
-                    style={styles.preview}
-                    ref={camera => this.camera = camera}
+            <React.Fragment>
+                <View>
+                    <Camera
+                        type={cameraType}
+                        flashMode={flashMode}
+                        style={styles.preview}
+                        ref={camera => this.camera = camera}
+                    />
+                </View>
+                {captures.length > 0 && <GalleryPage captures={captures}/>}
+                <Toolbar 
+                    capturing={capturing} // stores all photos
+                    flashMode={flashMode}
+                    cameraType={cameraType}
+                    setFlashMode={this.setFlashMode}
+                    setCameraType={this.setCameraType}
+                    onCaptureIn={this.handleCaptureIn}
+                    // onCaptureOut={this.handleCaptureOut}
+                    //onLongCapture={this.handleLongCapture}
+                    onShortCapture={this.handleShortCapture}
                 />
-            </View>
+            </React.Fragment>
         );
     };
 };
