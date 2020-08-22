@@ -9,6 +9,7 @@ class CameraPage extends React.Component {
     camera = null; // null = user denied or hasn't granded permissions
 
     // keeps track of user permission for camera
+
     state = {
         hasCameraPermision: null,
     };

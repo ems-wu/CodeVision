@@ -2,15 +2,20 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import CameraPage from './client/components/CameraPage';
+import Toolbar from './client/components/toolbar';
 
 //const Stack = createStackNavigator();
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-      <CameraPage />
-    </View>
+    <React.Fragment>
+      <View>
+        <CameraPage
+          style={styles.preview}
+          ref={camera => this.camera = camera}
+          />
+      </View>
+      <Toolbar />
+    </React.Fragment>
   );
 }
 
