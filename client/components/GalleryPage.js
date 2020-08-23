@@ -1,5 +1,3 @@
-// import React from 'react';
-// import { View, Image, ScrollView } from 'react-native';
 
 // import styles from './cameraStyles';
 
@@ -18,24 +16,38 @@
 // );
 
 import * as React from 'react';
-import { Button, Image, View } from 'react-native';
+import { Button, Image, View, Text, CameraRoll } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
+import { TouchableOpacity } from "react-native-gesture-handler";
+import {StyleSheet} from "react-native";
+import ImageView from "react-native-image-viewing";
 
 export default class ImagePickerExample extends React.Component {
   state = {
     image: null,
+    cameraRollUri: null,
   };
 
   render() {
     let { image } = this.state;
 
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Button title="Pick an image from camera roll" onPress={this._pickImage} />
-        {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+      <View style={styles.container}>
+        {/* <Button title="Pick an image from camera roll" onPress={this._pickImage} />
+        {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />} */}
+        <TouchableOpacity
+            style={styles.button}
+            onPress={this._pickImage} 
+            >         
+            <Text style={styles.buttonText}>Select Images</Text>
+        </TouchableOpacity>
+        <View>
+            {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+        </View>
       </View>
+      
     );
   }
 
@@ -55,11 +67,8 @@ export default class ImagePickerExample extends React.Component {
   _pickImage = async () => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
+        multiple: true
+    });
       if (!result.cancelled) {
         this.setState({ image: result.uri });
       }
@@ -70,3 +79,40 @@ export default class ImagePickerExample extends React.Component {
     }
   };
 }
+
+export const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#fff',
+        marginTop: 50,
+    },
+    imageViewerContainer: {
+        //backgroundColor: Colors.lighter,
+        height: '100%',
+        marginTop: 50,
+        padding: 5,
+    },
+    imageContainer: {
+        height: '90%',
+    },
+    image: {
+        margin: 5,
+        width: '50%',
+        height: 150,
+    },
+    button: {
+        width: 180,
+        height: 60,
+        backgroundColor: "#585858",
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 5,
+    },
+    buttonText: {
+        textAlign: 'center',
+        fontSize: 25,
+        color: '#fff',
+    },
+});

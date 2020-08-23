@@ -4,8 +4,7 @@ import { Camera, Permissions } from 'expo-camera';
 
 import styles from './cameraStyles';
 import Toolbar from './toolbar';
-import GalleryPage from './GalleryPage';
-import BottomTabNavigator from '../navigator/BottomTabNavigator';
+import * as MediaLibrary from 'expo-media-library';
 
 class CameraPage extends React.Component {s
     camera = null; // null = user denied or hasn't granded permissions
@@ -38,7 +37,6 @@ class CameraPage extends React.Component {s
         this.setState({ hasCameraPermission });
     };
 
-
     render() {
         const { hasCameraPermission, flashMode, cameraType, capturing, captures } = this.state;
 
@@ -58,8 +56,13 @@ class CameraPage extends React.Component {s
                         ref={camera => this.camera = camera}
                     />
                 </View>
-                {captures.length > 0 }
-                {/* {captures.length > 0 && <GalleryPage captures={captures}/>} */}
+                {/* {captures.length > 0 }
+                {captures.map(({ uri }) => (
+                    MediaLibrary.saveToLibraryAsync(uri)
+                ))} */}
+                {captures.map(({ uri }) => (
+                    MediaLibrary.saveToLibraryAsync(uri)
+                ))}
                 <Toolbar 
                     capturing={capturing} // stores all photos
                     flashMode={flashMode}

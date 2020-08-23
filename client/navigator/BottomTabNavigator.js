@@ -33,14 +33,10 @@ export default function BottomTabNav() {
               return <Ionicons name={iconName} size={size} color={color} />;
             },
           })}
-          tabBarOptions={{
-            activeTintColor: 'tomato',
-            inactiveTintColor: 'gray',
-          }}
         >
           <BottTab.Screen name="Camera" component={CameraPage} />
-          <BottTab.Screen name="Gallery" component={GalleryPage} />
           <BottTab.Screen name="Code Editor" component={CodeEditor} />
+          <BottTab.Screen name="Gallery" component={GalleryPage} />
         </BottTab.Navigator>
       </NavigationContainer>
     );
