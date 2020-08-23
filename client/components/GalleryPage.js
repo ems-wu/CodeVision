@@ -16,18 +16,21 @@
 // );
 
 import * as React from 'react';
-import { Button, Image, View, Text, CameraRoll } from 'react-native';
+import { Button, Image, View, Text, CameraRoll, ActivityIndicator } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import { TouchableOpacity } from "react-native-gesture-handler";
 import {StyleSheet} from "react-native";
-import ImageView from "react-native-image-viewing";
+const axios = require("axios");
+
 
 export default class ImagePickerExample extends React.Component {
   state = {
     image: null,
     cameraRollUri: null,
+    apiData: '',
+    loading: false
   };
 
   render() {
@@ -35,6 +38,13 @@ export default class ImagePickerExample extends React.Component {
 
     return (
       <View style={styles.container}>
+                        {
+                    this.state.loading &&
+                    <View style={{alignSelf: "center", marginTop: 32}}>
+                        <ActivityIndicator size="large"></ActivityIndicator>
+                    </View>
+                }
+
         {/* <Button title="Pick an image from camera roll" onPress={this._pickImage} />
         {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />} */}
         <TouchableOpacity
@@ -46,9 +56,64 @@ export default class ImagePickerExample extends React.Component {
         <View>
             {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
         </View>
+
+        <View style={styles.buttonView} >
+          <Text>Process Image </Text>
+            <TouchableOpacity style={styles.buttonCompile}  onPress={(event)=>{this.handleWritten();}}>
+                <Text style={{ color: "#FFF", fontWeight: "500"}}>WRITTEN</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.buttonRun}  onPress={(event)=>{this.handlePrinted();}}>
+                <Text style={{ color: "#FFF", fontWeight: "500"}}>PRINTED</Text>
+            </TouchableOpacity>
+        </View>
+
       </View>
       
     );
+  }
+
+  handlePrinted(){
+    const url = 'http://35.226.38.50/api/vision/upload/printed';
+    const formData = new FormData();
+    formData.append('imageData', this.state.image)
+    const config = {
+        headers: {
+            'content-type': 'multipart/form-data'
+        }
+    }
+    this.setState({loading: true})                
+    
+    axios.post(url, formData,config)
+    .then(response => {
+        this.setState({
+            apiData: response.data
+        })                
+        console.log(response.data);
+    })
+    .catch(err =>{
+        this.setState({loading: false})                
+    });
+  }
+  handleWritten(){
+    const url = 'http://35.226.38.50/api/vision/upload/written';
+    const formData = new FormData();
+    formData.append('imageData', this.state.image)
+    const config = {
+        headers: {
+            'content-type': 'multipart/form-data'
+        }
+    }
+    this.setState({loading: true})                
+    
+    axios.post(url, formData,config)
+    .then(response => {
+        this.setState({
+            apiData: response.data
+        })                
+    })
+    .catch(err =>{
+        this.setState({loading: false})                
+    });
   }
 
   componentDidMount() {
@@ -74,6 +139,7 @@ export default class ImagePickerExample extends React.Component {
       }
 
       console.log(result);
+
     } catch (E) {
       console.log(E);
     }
@@ -115,4 +181,30 @@ export const styles = StyleSheet.create({
         fontSize: 25,
         color: '#fff',
     },
+    buttonView:{
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      marginTop: 30,
+      marginHorizontal: 20
+  },
+  buttonCompile:{
+      marginHorizontal: 10,
+      backgroundColor: "rgba(1,50,50,0.8)",
+      borderRadius: 4,
+      height: 52,
+      alignItems: "center",
+      justifyContent: "center",
+      flex: 1
+  },
+  buttonRun:{
+      marginHorizontal: 10,
+      backgroundColor: "rgba(50,50,199,0.7)",
+      borderRadius: 4,
+      height: 52,
+      alignItems: "center",
+      justifyContent: "center",
+      flex: 1
+  }
+
 });

@@ -26,6 +26,7 @@ class CameraPage extends React.Component {s
 
     handleShortCapture = async () => {
         const photoData = await this.camera.takePictureAsync();
+        console.log(photoData);
         this.setState({ capturing: false, captures: [photoData, ...this.state.captures] })
     };
 
@@ -60,9 +61,9 @@ class CameraPage extends React.Component {s
                 {captures.map(({ uri }) => (
                     MediaLibrary.saveToLibraryAsync(uri)
                 ))} */}
-                {captures.map(({ uri }) => (
+                {/* {captures.map(({ uri }) => (
                     MediaLibrary.saveToLibraryAsync(uri)
-                ))}
+                ))} */}
                 <Toolbar 
                     capturing={capturing} // stores all photos
                     flashMode={flashMode}
