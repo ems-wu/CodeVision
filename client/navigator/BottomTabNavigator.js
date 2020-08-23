@@ -1,4 +1,5 @@
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import * as React from "react";
 import { Ionicons } from '@expo/vector-icons';
@@ -7,7 +8,7 @@ import CameraPage from '../components/CameraPage';
 import GalleryPage from '../components/GalleryPage';
 import CodeEditor from '../components/CodeEditor';
 
-const BottTab = createBottomTabNavigator();
+const BottTab = createMaterialBottomTabNavigator();
 
 export default function BottomTabNav() {
     return (
@@ -15,7 +16,7 @@ export default function BottomTabNav() {
           independent={true}>
         <BottTab.Navigator
           screenOptions={({ route }) => ({
-            tabBarIcon: ({ focused, color, size }) => {
+            tabBarIcon: ({ focused, color, size=25 }) => {
               let iconName;
   
               if (route.name === 'Camera') {

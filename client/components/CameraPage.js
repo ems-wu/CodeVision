@@ -58,6 +58,7 @@ class CameraPage extends React.Component {s
                         ref={camera => this.camera = camera}
                     />
                 </View>
+                {captures.length > 0 }
                 {/* {captures.length > 0 && <GalleryPage captures={captures}/>} */}
                 <Toolbar 
                     capturing={capturing} // stores all photos
