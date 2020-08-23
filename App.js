@@ -3,11 +3,18 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import CameraPage from './client/components/CameraPage';
 
-//const Stack = createStackNavigator();
+import BottomTabNavigator from './client/navigator/BottomTabNavigator';
+// import CodeEditer from './client/components/CodeEditor';
+
 export default class App extends React.Component {
   render() {
       return (
-          <CameraPage />
+        <View style={{ flex: 1 }}>
+            {Platform.OS === "ios"}
+            <CameraPage />
+            <BottomTabNavigator />
+        </View>
+
       );
   };
 };

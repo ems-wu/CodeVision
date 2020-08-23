@@ -5,6 +5,7 @@ import { Camera, Permissions } from 'expo-camera';
 import styles from './cameraStyles';
 import Toolbar from './toolbar';
 import GalleryPage from './GalleryPage';
+import BottomTabNavigator from '../navigator/BottomTabNavigator';
 
 class CameraPage extends React.Component {s
     camera = null; // null = user denied or hasn't granded permissions
@@ -24,20 +25,10 @@ class CameraPage extends React.Component {s
     setCameraType = (cameraType) => this.setState({ cameraType });
     handleCaptureIn = () => this.setState({ capturing: true });
 
-    // handleCaptureOut = () => {
-    //     if (this.state.capturing)
-    //         this.camera.stopRecording();
-    // };
-
     handleShortCapture = async () => {
         const photoData = await this.camera.takePictureAsync();
         this.setState({ capturing: false, captures: [photoData, ...this.state.captures] })
     };
-
-    // handleLongCapture = async () => {
-    //     const videoData = await this.camera.recordAsync();
-    //     this.setState({ capturing: false, captures: [videoData, ...this.state.captures] });
-    // };
 
     // requests permissions from user
     async componentDidMount() {
@@ -67,7 +58,7 @@ class CameraPage extends React.Component {s
                         ref={camera => this.camera = camera}
                     />
                 </View>
-                {captures.length > 0 && <GalleryPage captures={captures}/>}
+                {/* {captures.length > 0 && <GalleryPage captures={captures}/>} */}
                 <Toolbar 
                     capturing={capturing} // stores all photos
                     flashMode={flashMode}
@@ -75,10 +66,8 @@ class CameraPage extends React.Component {s
                     setFlashMode={this.setFlashMode}
                     setCameraType={this.setCameraType}
                     onCaptureIn={this.handleCaptureIn}
-                    // onCaptureOut={this.handleCaptureOut}
-                    //onLongCapture={this.handleLongCapture}
                     onShortCapture={this.handleShortCapture}
-                />
+                /> 
             </React.Fragment>
         );
     };
